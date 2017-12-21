@@ -1,0 +1,46 @@
+---
+- hosts: webserver
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: dist
+        update_cache: yes
+        cache_valid_time: 86400 #1day
+
+    - name: Install apache2
+      apt: name=apache2 state=installed
+
+    - name: Install packages
+      apt: name={{item}} state=latest
+      with_items:
+        - git
+        - mcrypt
+        - php
+        - php-mysql
+        - php-cli
+        - php-curl
+        - php-fpm
+        - php-intl
+        - php-json
+        - php-mcrypt
+    - name: Delete default index.html
+      file:
+        state: absent
+        path: "/var/www/html/index.html"
+    
+    - name: Create database IP file
+      file:
+        state: touch
+        path: "/var/www/html/DB_IP.txt"
+        
+    - name: Copy from database IP from ansible
+      copy:
+        src: dbIP.txt
+        dest: "/var/www/html/DB_IP.txt"
+
+    - name: Clone git repository
+      git:
+        repo='https://github.com/arnasfomenko/Virtualizacijund.git'
+        dest=/var/www/html
+        force=yes

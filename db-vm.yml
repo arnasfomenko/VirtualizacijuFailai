@@ -1,0 +1,55 @@
+---
+- hosts: test
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: dist
+        update_cache: yes
+        cache_valid_time: 86400 #1day
+
+    - name: Install MySQL
+      apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
+      become: yes
+      with_items:
+        - python-mysqldb
+        - mysql-server
+
+    - name: Change bind-adress
+      replace:
+        dest: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '127.0.0.1'
+        replace: '0.0.0.0'
+      notify:
+        - restart mysql
+        - restart mariadb
+
+    - name: Create virtualizacijos database
+      mysql_db:
+        name: virtualizacijos
+        state: present
+        
+    - name: Create database data file
+      file:
+        state: touch
+        path: "/tmp/DB_Data.sql"
+        
+    - name: Copy from database IP from ansible
+      copy:
+        src: DB_Data.sql
+        dest: "/tmp/DB_Data.sql"
+
+    - name: Create table, import info, grant webserver
+      mysql_db: name=virtualizacijos state=import target=/tmp/dump.sql
+
+  handlers:
+    - name: restart mysql
+      become: true
+      service:
+        name: mysql
+        state: restarted
+    - name: restart mariadb
+      become: true
+      service:
+        name: mariadb
+        state: restarted
