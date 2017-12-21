@@ -5,3 +5,5 @@ INSERT INTO users (id,username) VALUES(1,"arnas.fomenko");
 INSERT INTO users (id,username) VALUES(2,"lukas77305");
 
 INSERT INTO users (id,username) VALUES(3,"donce....");
+
+GRANT ALL ON virtualizacijos.* TO 'root'@'0.0.0.0' IDENTIFIED BY 'root';
