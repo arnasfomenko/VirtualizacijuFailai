@@ -32,12 +32,12 @@
     - name: Create database IP file
       file:
         state: touch
-        path: "/var/www/html/DB_IP.txt"
+        path: "/var/www/html/dbIP.txt"
         
     - name: Copy from database IP from ansible
       copy:
         src: dbIP.txt
-        dest: "/var/www/html/DB_IP.txt"
+        dest: "/var/www/html/dbIP.txt"
 
     - name: Clone git repository
       git:

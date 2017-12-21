@@ -40,7 +40,7 @@
         dest: "/tmp/DB_Data.sql"
 
     - name: Create table, import info, grant webserver
-      mysql_db: name=virtualizacijos state=import target=/tmp/dump.sql
+      mysql_db: name=virtualizacijos state=import target=/tmp/DB_Data.sql
 
   handlers:
     - name: restart mysql
