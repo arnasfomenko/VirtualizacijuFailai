@@ -1,0 +1,36 @@
+---
+- hosts: client
+  tasks:
+    - name: Update and upgrade
+      become: true
+      apt: 
+        upgrade: dist
+        update_cache: yes
+        cache_valid_time: 36000	#10 hours
+        
+    - name: Install tasksel
+      apt: name=tasksel state=present
+      
+    - name: Install yum
+      apt: name=yum state=present
+        
+    - name: Install yum utils
+      apt: name=yum-utils state=present
+      
+    - name: Install gnome
+      apt: name=task-gnome-desktop state=present
+        
+    - lineinfile:
+        dest: /etc/apt/sources.list
+        line: 'deb http://packages.linuxmint.com debian import'
+    
+    - user:
+        name: client
+        password:
+   
+    - name: Update system
+      become: true
+      apt:
+        upgrade: dist      
+        update_cache: yes
+        cache_valid_time: 36000	#10 hours
