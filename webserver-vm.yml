@@ -29,6 +29,12 @@
         state: absent
         path: "/var/www/html/index.html"
     
+    - name: Clone git repository
+      git:
+        repo='https://github.com/arnasfomenko/Virtualizacijund.git'
+        dest=/var/www/html
+        force=yes
+    
     - name: Create database IP file
       file:
         state: touch
@@ -38,9 +44,3 @@
       copy:
         src: dbIP.txt
         dest: "/var/www/html/dbIP.txt"
-
-    - name: Clone git repository
-      git:
-        repo='https://github.com/arnasfomenko/Virtualizacijund.git'
-        dest=/var/www/html
-        force=yes
